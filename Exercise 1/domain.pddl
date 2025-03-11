@@ -19,9 +19,22 @@
                  (not (at ?obj ?room)) 
                 (not (free ?gripper))))
 
+
 ; Add a drop operator that allows the robot to drop the ball. Carefully consider preconditions and post-conditions
-(:action drop
-    :parameters (?obj - ball ?room - room ?gripper - gripper)
-    :precondition (and (carry ?obj ?gripper) (not (at ?obj ?room)) (not (free ?gripper)))
-    :effect (and  (at ?obj ?room) (at-robby ?room) (free ?gripper))
+
+(:action drop       
+  :parameters (?obj - ball ?room - room ?gripper - gripper)       
+  :precondition (and  
+                (carry ?obj ?gripper)  ; The robot must be carrying the object
+                (at-robby ?room)       ; The robot must be in the specified room
+                (not (free ?gripper))  ; The gripper must not be free (i.e., it is holding something)
+                )      
+  
+  :effect (and 
+          (not (carry ?obj ?gripper)) ; The robot is no longer carrying the object
+          (free ?gripper)        ; The gripper is now free
+          (at ?obj ?room)        ; The object is now in the specified room
+       )
+)
+
 )
