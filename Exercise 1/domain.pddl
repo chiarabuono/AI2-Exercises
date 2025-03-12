@@ -3,6 +3,7 @@
    (:types room ball gripper)
    (:predicates (at-robby ?r1 - room)
                 (at ?b - ball ?r - room)
+                (connect ?r1 - room ?r2 - room)
                 (free1 ?g - gripper)
                 (free2 ?g - gripper)  
                 (carry1 ?o - ball ?g - gripper)
@@ -12,7 +13,10 @@
 
 (:action move       
    :parameters  (?from - room ?to - room)
-   :precondition (at-robby ?from)     
+   :precondition (and 
+                  (at-robby ?from)
+                  (or(connect ?from ?to) (connect ?to ?from))
+                  )     
    :effect (and  (at-robby ?to)
                  (not (at-robby ?from)))   
 )

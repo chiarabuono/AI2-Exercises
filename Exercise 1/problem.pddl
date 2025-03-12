@@ -1,6 +1,6 @@
 (define (problem gripper-x-1)   
 (:domain gripper)   
-(:objects rooma roomb - room 
+(:objects rooma roomb roomc - room 
           ball2 ball1 ball3 ball4 ball5 - ball              
           left right - gripper)          
 (:init (at-robby rooma)
@@ -11,11 +11,13 @@
        (at ball3 rooma)
        (at ball4 rooma)
        (at ball5 rooma)
+       (connect rooma roomb)
+       (connect roomb roomc)
        )  
 (:goal (and (at ball2 roomb)
             (at ball1 roomb)
             (at ball3 roomb)
-            (at ball4 roomb)
-            (at ball5 roomb)
+            (at ball4 roomc)
+            (at ball5 roomc)
             ))
 )
