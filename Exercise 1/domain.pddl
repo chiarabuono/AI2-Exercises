@@ -2,39 +2,56 @@
    (:requirements :adl :typing)
    (:types room ball gripper)
    (:predicates (at-robby ?r1 - room)
-	       (at ?b - ball ?r - room)
-    	       (free ?g - gripper)		
-                (carry ?o - ball ?g - gripper))
+                (at ?b - ball ?r - room)
+                (free1 ?g - gripper)
+                (free2 ?g - gripper)  
+                (carry1 ?o - ball ?g - gripper)
+                (carry2 ?o - ball ?g - gripper)
+
+   )
 
 (:action move       
    :parameters  (?from - room ?to - room)
-   :precondition (and (at-robby ?from ))      
-   :effect (and  (at-robby ?to )
-	     (not (at-robby ?from ))))
+   :precondition (at-robby ?from)     
+   :effect (and  (at-robby ?to)
+                 (not (at-robby ?from)))   
+)
 
 (:action pick       
   :parameters (?obj - ball ?room - room ?gripper - gripper)       
-  :precondition  (and  (at ?obj ?room) (at-robby ?room) (free ?gripper))      
-  :effect (and (carry ?obj ?gripper) 
-                 (not (at ?obj ?room)) 
-                (not (free ?gripper))))
-
-
-; Add a drop operator that allows the robot to drop the ball. Carefully consider preconditions and post-conditions
+  :precondition (and  
+                  (at ?obj ?room) 
+                  (at-robby ?room) 
+                  (or(free1 ?gripper) (free2 ?gripper))    
+                )     
+  :effect (and
+              (not (at ?obj ?room))
+              (when (free1 ?gripper) 
+                    (and(not (free1 ?gripper)) (carry1 ?obj ?gripper)))
+              (when (and(free2 ?gripper) (not (free1 ?gripper))) 
+                    (and(not (free2 ?gripper))
+                    (carry2 ?obj ?gripper))
+                    )
+          )  
+)
 
 (:action drop       
   :parameters (?obj - ball ?room - room ?gripper - gripper)       
   :precondition (and  
-                (carry ?obj ?gripper)  ; The robot must be carrying the object
-                (at-robby ?room)       ; The robot must be in the specified room
-                (not (free ?gripper))  ; The gripper must not be free (i.e., it is holding something)
+                (or(carry1 ?obj ?gripper) (carry2 ?obj ?gripper))  
+                (at-robby ?room)       
                 )      
-  
-  :effect (and 
-          (not (carry ?obj ?gripper)) ; The robot is no longer carrying the object
-          (free ?gripper)        ; The gripper is now free
-          (at ?obj ?room)        ; The object is now in the specified room
-       )
-)
+  :effect (and
+          (when (carry1 ?obj ?gripper) 
+                (and(free1 ?gripper)
+                (not(carry1 ?obj ?gripper)))
+                )
+          (when (carry2 ?obj ?gripper) 
+                (and(free2 ?gripper)
+                (not(carry2 ?obj ?gripper)))
+                )
 
+          (at ?obj ?room)
+         )
+)
 )
