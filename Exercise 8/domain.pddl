@@ -18,7 +18,7 @@
 		     )
        
     )
-
+   
 ;    (:action pick
 ;        :parameters (?obj ?room ?gripper)
 ;        :precondition  (and  (ball ?obj) (room ?room) (gripper ?gripper)
@@ -36,13 +36,13 @@
 ; 		    (free ?gripper)
 ; 		    (not (carry ?obj ?gripper))))
    
-   ; MACRO 
-  
+   ; MACRO What can be a good macro operator? Can you encode it?
+   
    (:action pick-and-drop
     :parameters (?obj ?from ?to ?gripper)
     :precondition (and (ball ?obj) (room ?from) (room ?to) (gripper ?gripper)
                        (at ?obj ?from) (at-robby ?from) (free ?gripper)
-                       (not (= ?from ?to))) ; Avoid picking and dropping in the same room
+                       (not (= ?from ?to))) ; Entaglement by goal Avoid picking and dropping in the same room 
     :effect (and (not (at ?obj ?from))
                  (picked ?obj)
                  (carry ?obj ?gripper)
